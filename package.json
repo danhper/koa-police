@@ -4,7 +4,7 @@
   "description": "Authentication framework for Koa",
   "main": "lib/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --harmony --recursive test"
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive test"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   "devDependencies": {
     "chai": "^2.1.2",
     "chai-as-promised": "^5.0.0",
+    "istanbul-harmony": "^0.3.12",
     "koa": "^0.21.0",
     "mocha": "^2.2.5",
     "supertest": "^1.0.1"
