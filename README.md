@@ -13,9 +13,13 @@ Simply run
 $ npm install --save koa-police
 ```
 
-## Usage
+## Getting started
 
-You just need to provide the strategies and providers when initializing the middleware, here is an example with some dummy strategy.
+`koa-police` uses policies to select which path should be protected,
+and is used as a normal Koa middleware.
+
+When initializing the middleware, you just need to provide the strategies and
+policies you want to use. Here is an example with some dummy strategy.
 
 ```javascript
 var koa        = require('koa');
@@ -46,16 +50,16 @@ app.use(koaPolice({
 }));
 
 app.use(function *() {
-  // your app, as usual
+  this.body = {user: this.state.user, admin: this.state.admin};
 });
 ```
 
 This will try to authenticate an admin for the `/admin` path, and to
 authenticate a user for any path that matches the regexp `/users.*`.
 By default, all policies are enforced, meaning that if no strategy
-succeeded to authenticate, and error will be raised. However,
-by passing `enforce: false`, the user will be set if found, and the middleware
-will be noop otherwise.
+succeeded to authenticate, and error will be raised.
+However, by passing `enforce: false`, the user will be set if found,
+and the middleware will be noop otherwise.
 
 The `defaultStrategies` will be used on every policy, unless you explicitly
 set `strategies` on the policy object in which case these will be overriden.
@@ -66,6 +70,27 @@ is the policy scope defaulting to user.
 
 When the authentication fails, an `AuthenticationError` is thrown, so you
 just need to check for it in your error handler and do what you want.
+
+## Handling authentication errors
+
+Thanks to Koa middlewares, handling authentication error is trivial,
+you just need to use a middleware before calling the `koa-police` middleware
+and handle errors as usual. Here is an example middleware:
+
+```javascript
+app.use(function *(next) {
+  try {
+    yield next;
+  } catch (err) {
+    if (err instanceof koaPolice.AuthenticationError) {
+      console.log('rejected by: ' + err.policy);
+      this.status = 401;
+      this.body = 'You are not authorized';
+    }
+    // handle other errors if you want
+  }
+});
+```
 
 ## Custom strategies
 
