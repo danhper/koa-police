@@ -3,7 +3,7 @@
 
 An easy to use and extend authentication library for [Koa](http://koajs.com/).
 
-It is compatible with node >= 0.11 with the `--harmony` flag, and any version of [io.js](https://iojs.org/en/index.html).
+It is compatible with node >= 0.11.16 with the `--harmony` flag, and any version of [io.js](https://iojs.org/en/index.html).
 
 ## Installation
 
