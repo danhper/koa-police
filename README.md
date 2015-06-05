@@ -37,7 +37,7 @@ var dummyStrategy = {
 var app = koa();
 
 app.use(koaPolice({
-  strategies: [dummyStrategy],
+  defaultStrategies: [dummyStrategy],
   policies: [
     {path: '/admin', scope: 'admin'},
     {path: /\/users.*/, scope: 'user', enforce: false}
@@ -55,6 +55,9 @@ By default, all policies are enforced, meaning that if no strategy
 succeeded to authenticate, and error will be raised. However,
 by passing `enforce: false`, the user will be set if found, and the middleware
 will be noop otherwise.
+
+The `defaultStrategies` will be used on every policy, unless you explicitly
+set `strategies` on the policy object in which case these will be overriden.
 
 When the authentication succeeds, the value returned by the strategy that
 succeeded first will be stored in `context.state[scope]` where the `scope`
@@ -87,7 +90,7 @@ var sessionStrategy = {
 };
 ```
 
-You can also find a full working example using `htpasswd` files in [the koa-police-htpasswd example directory](https://github.com/tuvistavie/koa-police-htpasswd/example).
+You can also find a full working example using `htpasswd` files in [the koa-police-htpasswd example directory](https://github.com/tuvistavie/koa-police-htpaswd/tree/master/example).
 
 ## Motivations
 
