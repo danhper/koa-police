@@ -1,4 +1,5 @@
 # koa-police
+[![Build Status](https://travis-ci.org/tuvistavie/koa-police.svg)](https://travis-ci.org/tuvistavie/koa-police)
 
 An easy to use and extend authentication library for [Koa](http://koajs.com/).
 
