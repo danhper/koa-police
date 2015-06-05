@@ -2,8 +2,9 @@
 
 require('../test-helpers');
 
-const expect = require('chai').expect;
-const Policy = require('../../lib/policy');
+const expect   = require('chai').expect;
+const Policy   = require('../../lib/policy');
+const Executor = require('../../lib/executor');
 
 describe('Policy', function () {
   describe('creation', function () {
@@ -69,6 +70,21 @@ describe('Policy', function () {
       let policy = new Policy({path: /\/dashboard.*/, scope: 'user', enforce: false});
       let expected = 'Path: /\\/dashboard.*/, scope: user, enforce: false';
       expect(policy.toString()).to.equal(expected);
+    });
+  });
+
+  describe('hasStrategy', function () {
+    let policy;
+    beforeEach(function () {
+      policy = new Policy({path: 'foo'});
+      policy.executor = new Executor([require('../mocks/dummy-strategy')]);
+    });
+    it('should return true when strategy present', function () {
+      expect(policy.hasStrategy('dummy')).to.be.true;
+    });
+
+    it('should return false otherwise', function () {
+      expect(policy.hasStrategy('inexistent')).to.be.false;
     });
   });
 });

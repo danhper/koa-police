@@ -10,7 +10,7 @@ const dummyStrategy = require('../mocks/dummy-strategy');
 
 let app = koa();
 app.use(koaPolice({
-  strategies: [dummyStrategy],
+  defaultStrategies: [dummyStrategy],
   policies: [{path: /\/private.*/}, {path: /\/admin.*/, scope: 'admin'}]
 }));
 app.use(function *() {

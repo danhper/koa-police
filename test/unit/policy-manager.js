@@ -5,21 +5,26 @@ require('../test-helpers');
 const co            = require('co');
 const expect        = require('chai').expect;
 const dummyStrategy = require('../mocks/dummy-strategy');
-const Manager       = require('../../lib/manager');
 const PolicyManager = require('../../lib/policy-manager');
 const Policy        = require('../../lib/policy');
+
+const allThroughStrategy = {
+  name: 'allThrough',
+  authenticate: function *() {
+    return 'all through, yeahh';
+  }
+};
 
 describe('PolicyManager', function () {
   let policyManager;
   beforeEach(function () {
-    let manager = new Manager();
-    policyManager = new PolicyManager(manager);
-    manager.addStrategy(dummyStrategy);
+    policyManager = new PolicyManager([], [dummyStrategy]);
     policyManager._policies = [];
     policyManager.addPolicy(new Policy({path: '/secure'}));
     policyManager.addPolicy({path: /\/dashboard.*/, enforce: false});
     policyManager.addPolicy({path: /\/dashboard\/profile.*/, enforce: true});
     policyManager.addPolicy({path: /\/dashboard\/admin.*/, scope: 'admin'});
+    policyManager.addPolicy({path: '/not-very-safe', strategies: [allThroughStrategy]});
     policyManager.policies().forEach(function (p) {
       expect(p).to.be.an.instanceof(Policy);
     });
@@ -77,6 +82,13 @@ describe('PolicyManager', function () {
     it('should return scopes', function () {
       let request = {path: '/dashboard/profile', username: 'foobar'};
       expect(this.applyPolicies(request)).to.eventually.deep.equal({user: {username: 'foobar'}});
+    });
+
+    describe('strategy override', function () {
+      it('should use strategies provided to policy', function () {
+        let promise = this.applyPolicies({path: '/not-very-secure'});
+        expect(promise).to.eventually.equal('all through, yeahh');
+      });
     });
   });
 });

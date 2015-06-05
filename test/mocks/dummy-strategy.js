@@ -3,6 +3,7 @@
 const _ = require('lodash');
 
 module.exports = {
+  name: 'dummy',
   _authorizedUsers: [{username: 'foobar'}],
   authenticate: function *(context, scope) {
     scope = scope || 'user';

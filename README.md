@@ -25,6 +25,7 @@ var userTokens = {
 };
 
 var dummyStrategy = {
+  name: 'dummy',
   authenticate: function *(context, scope) {
     if (scope === 'user' && context.header.authorization) {
       return userTokens[context.header.authorization];
@@ -66,7 +67,7 @@ just need to check for it in your error handler and do what you want.
 
 Strategies are not shipped with `koa-police` directly, I am currently working
 on some reusable strategies, but it is very easy to create your own.
-A strategy is an object with a generator function called `authenticate`.
+A strategy is an object with a property called `name`, which should be unique and to the strategy, and generator function called `authenticate`.
 `authenticate` takes the current request context, as well as the scope
 trying to be authenticated. So, for example, the strategy used in the
 example above is valid, though not very useful.
@@ -76,6 +77,7 @@ Here is a sample strategy trying to authenticate `user`, using `koa-session`.
 
 ```javascript
 var sessionStrategy = {
+  name: 'session',
   authenticate: function *(context, scope) {
     if (scope !== 'user' || !context.session.userId) {
       return false;
@@ -84,6 +86,8 @@ var sessionStrategy = {
   }
 };
 ```
+
+You can also find a full working example using `htpasswd` files in [the koa-police-htpasswd example directory](https://github.com/tuvistavie/koa-police-htpasswd/example).
 
 ## Motivations
 
@@ -97,4 +101,4 @@ to take advantage of this to get a cleaner authentication process, avoiding
 ## Contributing
 
 This library is still in early stage, but I am open to any help, either to
-improve it, or to create reusable strategies.
+improve it, or to create cool reusable strategies.

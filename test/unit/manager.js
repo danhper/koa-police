@@ -5,7 +5,7 @@ require('../test-helpers');
 const co          = require('co');
 const expect      = require('chai').expect;
 
-const Manager = require('../../lib/manager');
+const Executor = require('../../lib/executor');
 
 const dummyStrategy = require('../mocks/dummy-strategy');
 
@@ -14,26 +14,26 @@ const invalidStrategy = {
   }
 };
 
-describe('Manager', function () {
-  let manager;
+describe('Executor', function () {
+  let executor;
   beforeEach(function () {
-    manager = new Manager();
-    manager.addStrategy(dummyStrategy);
+    executor = new Executor();
+    executor.addStrategy(dummyStrategy);
   });
 
   describe('addStrategy', function () {
     it('should throw error on missing method', function () {
-      expect(manager.addStrategy.bind(manager, {})).to.throw();
+      expect(executor.addStrategy.bind(executor, {})).to.throw();
     });
     it('should throw error on invalid authenticate method', function () {
-      expect(manager.addStrategy.bind(manager, invalidStrategy)).to.throw();
+      expect(executor.addStrategy.bind(executor, invalidStrategy)).to.throw();
     });
   });
 
   describe('authenticate', function () {
     beforeEach(function () {
       this.authenticate =
-        co.wrap(manager.authenticate.bind(manager));
+        co.wrap(executor.authenticate.bind(executor));
     });
 
     it('should return user when authenticated', function () {
