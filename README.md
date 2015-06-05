@@ -1,5 +1,5 @@
 # koa-police
-[![npm version](https://badge.fury.io/js/koa-police.svg)](http://badge.fury.io/js/koa-police) [![Build Status](https://travis-ci.org/tuvistavie/koa-police.svg)](https://travis-ci.org/tuvistavie/koa-police) [![Coverage Status](https://coveralls.io/repos/tuvistavie/koa-police/badge.svg)](https://coveralls.io/r/tuvistavie/koa-police)
+[![npm version](https://badge.fury.io/js/koa-police.svg)](http://badge.fury.io/js/koa-police) [![Build Status](https://travis-ci.org/tuvistavie/koa-police.svg)](https://travis-ci.org/tuvistavie/koa-police) [![Coverage Status](https://coveralls.io/repos/tuvistavie/koa-police/badge.svg?coveralls)](https://coveralls.io/r/tuvistavie/koa-police)
 
 An easy to use and extend authentication library for [Koa](http://koajs.com/).
 
