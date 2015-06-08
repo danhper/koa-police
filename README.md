@@ -94,8 +94,7 @@ app.use(function *(next) {
 
 ## Custom strategies
 
-Strategies are not shipped with `koa-police` directly, I am currently working
-on some reusable strategies, but it is very easy to create your own.
+Strategies are not shipped with `koa-police` directly. You can either pick one from the available strategies, or create your own.
 A strategy is an object with a property called `name`, which should be unique and to the strategy, and generator function called `authenticate`.
 `authenticate` takes the current request context, as well as the scope
 trying to be authenticated. So, for example, the strategy used in the
@@ -127,7 +126,14 @@ can be implemented in a very clean way. The main goal of this library is
 to take advantage of this to get a cleaner authentication process, avoiding
 [callback hell](http://callbackhell.com/) and promises all around the place.
 
+## Available strategies
+
+* [htpasswd](https://github.com/tuvistavie/koa-police-htpasswd): A strategy using the `htpasswd` file format to check for users.
+* [JSON Web Token](https://github.com/tuvistavie/koa-police-jwt): A strategy using JWT to authenticate users.
+
 ## Contributing
 
 This library is still in early stage, but I am open to any help, either to
 improve it, or to create cool reusable strategies.
+
+If you want your strategy to be listed in this README, please send a pull request.
