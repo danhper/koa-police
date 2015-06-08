@@ -7,11 +7,31 @@ const expect        = require('chai').expect;
 const dummyStrategy = require('../mocks/dummy-strategy');
 const PolicyManager = require('../../lib/policy-manager');
 const Policy        = require('../../lib/policy');
+const AuthError     = require('../../lib/authentication-error');
+
+const MyError = function (message) {
+  this.message = message;
+};
+MyError.prototype = Object.create(Error.prototype, {constructor: MyError.constructor});
 
 const allThroughStrategy = {
   name: 'allThrough',
   authenticate: function *() {
     return 'all through, yeahh';
+  }
+};
+
+const failingStrategy = {
+  name: 'throws-auth',
+  authenticate: function *() {
+    throw new AuthError('whatever');
+  }
+};
+
+const erroringStrategy = {
+  name: 'i-have-errors',
+  authenticate: function *() {
+    throw new MyError('something really not cool happened');
   }
 };
 
@@ -25,6 +45,8 @@ describe('PolicyManager', function () {
     policyManager.addPolicy({path: /\/dashboard\/profile.*/, enforce: true});
     policyManager.addPolicy({path: /\/dashboard\/admin.*/, scope: 'admin'});
     policyManager.addPolicy({path: '/not-very-safe', strategies: [allThroughStrategy]});
+    policyManager.addPolicy({path: '/throwing-auth-error', strategies: [failingStrategy]});
+    policyManager.addPolicy({path: '/throwing-error', strategies: [erroringStrategy]});
     policyManager.policies().forEach(function (p) {
       expect(p).to.be.an.instanceof(Policy);
     });
@@ -88,6 +110,18 @@ describe('PolicyManager', function () {
       it('should use strategies provided to policy', function () {
         let promise = this.applyPolicies({path: '/not-very-secure'});
         expect(promise).to.eventually.equal('all through, yeahh');
+      });
+    });
+
+    describe('handling of throwing strategies', function () {
+      it('should handle thrown authentication errors', function () {
+        let promise = this.applyPolicies({path: '/throwing-auth-error'});
+        expect(promise).to.be.rejectedWith(AuthError);
+      });
+
+      it('should bubble up other errors', function () {
+        let promise = this.applyPolicies({path: '/throwing-error'});
+        expect(promise).to.be.rejectedWith(MyError);
       });
     });
   });
