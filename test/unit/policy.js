@@ -63,6 +63,12 @@ describe('Policy', function () {
       expect(policy.appliesTo('/foo/dashboard')).to.be.false;
       expect(policy.appliesTo('/dashboard')).to.be.false;
     });
+
+    it('should respect method', function () {
+      let policy = new Policy({path: '/path', methods: ['GET']});
+      expect(policy.appliesTo('/path', 'GET')).to.be.true;
+      expect(policy.appliesTo('/path', 'POST')).to.be.false;
+    });
   });
 
   describe('toString', function () {
